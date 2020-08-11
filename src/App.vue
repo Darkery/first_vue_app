@@ -1,17 +1,43 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <p ref="a">111</p>
+    <p>{{ banana }}</p>
+    <!-- <HelloWorld msg="Welcome to Your Vue.js App"/> -->
+    <Watch/>
+    <Test/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+// import HelloWorld from './components/HelloWorld.vue'
+import Watch from './components/Watch'
+import Test from './components/Test'
 
 export default {
   name: 'App',
+  data() {
+    return {
+      apple: 'apple',
+      banana: 'banana'
+    }
+  },
+  // data: {
+  //   apple: 'cccc',
+  //   banana: 'zzzzzzz'
+  // },
   components: {
-    HelloWorld
+    // HelloWorld,
+    Watch,
+    Test
+  },
+  mounted () {
+    this.jing()
+  },
+  methods: {
+    jing () {
+      this.$refs['a'].textContent = this.$data.apple
+    }
   }
 }
 </script>
