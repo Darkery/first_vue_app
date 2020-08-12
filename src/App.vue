@@ -1,17 +1,24 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <div id="logo">
+      <el-row>
+        <el-col :span="10"><img style="height: 200px;" src="./assets/logo.png"></el-col>
+        <el-col :span="14"><h1>Diagnostic Center</h1></el-col>
+      </el-row>
+    </div>
+    <div>
+      <CheckerGraph/>
+    </div>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import CheckerGraph from './components/CheckerGraph.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    CheckerGraph
   }
 }
 </script>
@@ -21,8 +28,15 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+}
+#logo {
+  text-align: right;
+  height: 200px;
+}
+h1 {
+  font-size: 50px;
+  margin-top: 80px;
+  text-align: left;
 }
 </style>
