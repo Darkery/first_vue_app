@@ -4,30 +4,24 @@
       <h2>Plese input the following needed items:</h2>
       <el-form>
         <el-form-item>
-          <label class="inputs">Vsystm URL:</label>
-          <el-input class="inputs" v-model="inputs.vsystemUrl" placeholder="please edit here..."></el-input>
+          <label class="formItems">Vsystm URL:</label>
+          <el-input class="formItems" v-model="formItems.vsystemUrl" placeholder="please edit here..."></el-input>
         </el-form-item>
         <el-form-item>
-          <label class="inputs">Vsystm Password:</label>
-          <el-input class="inputs" v-model="inputs.vsystemPassword" show-password placeholder="please edit here..."></el-input>
+          <label class="formItems">Vsystm Password:</label>
+          <el-input class="formItems" v-model="formItems.vsystemPassword" show-password placeholder="please edit here..."></el-input>
         </el-form-item>
         <el-form-item>
-          <label class="inputs">Kubeconfig File:</label>
-          <el-upload
-            class="inputs"
-            action="https://jsonplaceholder.typicode.com/posts/"
-            :on-preview="handlePreview"
-            :on-remove="handleRemove"
-            :before-remove="beforeRemove"
-            :multiple="false"
-            :limit="1"
-            :auto-upload="false"
-            :file-list="fileList">
-            <el-button class="inputs" round type="primary">Select File</el-button>
-            <!-- <div slot="tip" class="inputs">Single file max 500kb</div> -->
-          </el-upload>
+          <el-row><label class="formItems">Kubeconfig File: </label></el-row>
+          <el-button class="formItems" icon="el-icon-document-copy" round @click="checkFile">Choose File</el-button>
+          <span class="formItems">  {{fileName}}  </span>
+          <input type="file" id="fileinput" style="display:none;"  @change="onFileChange"/>
+          <el-button class="formItems" id="removeBtn" icon="el-icon-document-copy" size="small" round @click="removeFile">Delete</el-button>
         </el-form-item>
-        </el-form>
+        <el-form-item style="text-align: right;">
+          <el-button class="formItems" round type="primary" @click="submitForm">Submit</el-button>
+        </el-form-item>
+      </el-form>
     </div>
     <div v-if="checkResult" id="checkerGraph">
     </div>
@@ -38,31 +32,23 @@
 
 <script>
 export default {
-  name: '#CheckGraph',
+  name: 'CheckGraph',
   data() {
     return {
-      inputs: {
+      formItems: {
         vsystemUrl: '',
-        vsystemPassword: ''
+        vsystemPassword: '',
+        configFile: ''
       },
       fileName: '',
-      configFile: '',
-      fileList: [],
       checkResult: ''
     };
   },
   methods: {
-    submitUpload() {
-      this.$refs.upload.submit();
-    },
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
-    },
-    handlePreview(file) {
-      console.log(file);
-    },
-    beforeRemove(file, fileList) {
-      return this.$confirm(`Are you sure to remove ${ file.name }？`);
+    submitForm() {
+      console.log(this.formItems.vsystemUrl)
+      console.log(this.formItems.vsystemPassword)
+      console.log(this.formItems.configFile)
     },
     
     checkFile () {
@@ -70,45 +56,48 @@ export default {
     },
 
     onFileChange(e) {
-      var files = e.target.files || e.dataTransfer.files;
+      var files = e.target.files || e.dataTransfer.files
       if (!files.length)
         return;
       this.fileName = document.querySelector('#fileinput').files[0].name
-      this.getFile(files[0]);
+      this.getFile(files[0])
+      document.querySelector('#removeBtn').setAttribute("style", "display;")
     },
 
     getFile(file) {
-      var reader = new FileReader();
+      var reader = new FileReader()
       var vm = this;
-
       reader.onload = (e) => {
-        vm.configFile = e.target.result;
+        vm.formItems.configFile = e.target.result
       };
-      reader.readAsDataURL(file);
-    },
-
-    sendFile(file) {
-      var formData = new FormData(form);
-      formData.append("data", this.configFile);
-      this.$http
-        .post(that.$api.xxxx, data, {
-          headers: { "Content-Type": "multipart/form-data" },
-          transformRequest: [
-            function(d) {
-              return d;
-            }
-          ]
-        })
-        .then(res => {
-          if (res.data.code == 200) {
-           
-          }
-        });
+      reader.readAsDataURL(file)
     },
 
     removeFile: function (e) {
-      this.configFile = '';
+      this.formItems.configFile = ''
+      document.querySelector('#fileinput').value = null
+      this.fileName = ''
+      document.querySelector('#removeBtn').setAttribute("style", "display:none;")
     }
+
+    // sendFile(file) {
+    //   var formData = new FormData(form);
+    //   formData.append("data", this.configFile);
+    //   this.$http
+    //     .post(that.$api.xxxx, data, {
+    //       headers: { "Content-Type": "multipart/form-data" },
+    //       transformRequest: [
+    //         function(d) {
+    //           return d;
+    //         }
+    //       ]
+    //     })
+    //     .then(res => {
+    //       if (res.data.code == 200) {
+           
+    //       }
+    //     });
+    // },
   }
 }
 </script>
@@ -117,7 +106,7 @@ export default {
 <style scoped>
 #inputDiv {
   margin: auto;
-  width: 900px;
+  width: 800px;
   text-align: left;
 }
 #checkerGraph {
@@ -137,7 +126,7 @@ export default {
   border-width: 2px;
   border-color: blue;
 }
-.inputs {
+.formItems {
   font-size:15px;
 }
 </style>
