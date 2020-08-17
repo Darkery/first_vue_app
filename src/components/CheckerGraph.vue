@@ -31,6 +31,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'CheckGraph',
   data() {
@@ -45,13 +47,7 @@ export default {
     };
   },
   methods: {
-    submitForm() {
-      console.log(this.formItems.vsystemUrl)
-      console.log(this.formItems.vsystemPassword)
-      console.log(this.formItems.configFile)
-    },
-    
-    checkFile () {
+    checkFile() {
       document.querySelector('#fileinput').click()
     },
 
@@ -73,13 +69,37 @@ export default {
       reader.readAsDataURL(file)
     },
 
-    removeFile: function (e) {
+    removeFile(e) {
       this.formItems.configFile = ''
       document.querySelector('#fileinput').value = null
       this.fileName = ''
       document.querySelector('#removeBtn').setAttribute("style", "display:none;")
-    }
+    },
 
+    sendForm(jsonForm) {
+      console.log(jsonForm)
+      axios.post('/url', {
+        jsonData: jsonForm
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    },
+    
+    submitForm() {
+      console.log(this.formItems.vsystemUrl)
+      console.log(this.formItems.vsystemPassword)
+      console.log(this.formItems.configFile)
+      var jsonForm = JSON.stringify({
+        username: this.formItems.vsystemUrl,
+        password: this.formItems.vsystemPassword,
+        password: this.formItems.configFile,
+      });
+      this.sendForm(jsonForm)
+    },
     // sendFile(file) {
     //   var formData = new FormData(form);
     //   formData.append("data", this.configFile);
