@@ -22,6 +22,7 @@
           <el-button class="formItems" round type="primary" @click="submitForm">Submit</el-button>
         </el-form-item>
       </el-form>
+      <el-button class="formItems" round type="primary" @click="checkTaskStatus">Check Task Status</el-button>
     </div>
     <div v-if="checkResult" id="checkerGraph">
     </div>
@@ -86,11 +87,29 @@ export default {
         console.log(error);
       });
     },
+
+    sendForm(jsonForm) {
+      console.log(jsonForm)
+      client.post('/post', jsonForm)
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    },
     
     submitForm() {
-      console.log(this.formItems.vsystemUrl)
-      console.log(this.formItems.vsystemPassword)
-      console.log(this.formItems.configFile)
+      for (var item in this.formItems) {
+        console.log(item)
+        if (this.formItems[item] == '') {
+          this.$alert('Please check your inputs without empty.', 'Alert', {
+            confirmButtonText: 'OK'
+          });
+          return
+        }
+      }
+
       var jsonForm = JSON.stringify([
         {
           itemName : "vsystemURL",
@@ -107,6 +126,15 @@ export default {
       ]);
       this.sendForm(jsonForm)
     },
+
+    checkTaskStatus() {
+      client.get('/checkResult')
+      .then(function (res) {
+        if (res.status == 200){
+          console.log(res.data);
+        }
+      })
+    }
   }
 }
 </script>
