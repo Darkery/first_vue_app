@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import client from "@/utils/client";
 
 export default {
   name: 'CheckGraph',
@@ -66,7 +66,7 @@ export default {
       reader.onload = (e) => {
         vm.formItems.configFile = e.target.result
       };
-      reader.readAsDataURL(file)
+      reader.readAsText(file)
     },
 
     removeFile(e) {
@@ -78,9 +78,7 @@ export default {
 
     sendForm(jsonForm) {
       console.log(jsonForm)
-      axios.post('/url', {
-        jsonData: jsonForm
-      })
+      client.post('/post', jsonForm)
       .then(function (response) {
         console.log(response);
       })
@@ -93,31 +91,22 @@ export default {
       console.log(this.formItems.vsystemUrl)
       console.log(this.formItems.vsystemPassword)
       console.log(this.formItems.configFile)
-      var jsonForm = JSON.stringify({
-        username: this.formItems.vsystemUrl,
-        password: this.formItems.vsystemPassword,
-        password: this.formItems.configFile,
-      });
+      var jsonForm = JSON.stringify([
+        {
+          itemName : "vsystemURL",
+          itemValue : this.formItems.vsystemUrl
+        },
+        {
+          itemName : "password",
+          itemValue : this.formItems.vsystemPassword
+        },
+        {
+          itemName : "kubeConfig",
+          itemValue : this.formItems.configFile
+        },
+      ]);
       this.sendForm(jsonForm)
     },
-    // sendFile(file) {
-    //   var formData = new FormData(form);
-    //   formData.append("data", this.configFile);
-    //   this.$http
-    //     .post(that.$api.xxxx, data, {
-    //       headers: { "Content-Type": "multipart/form-data" },
-    //       transformRequest: [
-    //         function(d) {
-    //           return d;
-    //         }
-    //       ]
-    //     })
-    //     .then(res => {
-    //       if (res.data.code == 200) {
-           
-    //       }
-    //     });
-    // },
   }
 }
 </script>
