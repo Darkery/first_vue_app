@@ -14,7 +14,7 @@
         <el-form-item>
           <el-row><label class="formItems">Kubeconfig File: </label></el-row>
           <el-button class="formItems" icon="el-icon-document-copy" round @click="checkFile">Choose File</el-button>
-          <span class="formItems">  {{fileName}}  </span>
+          <span class="formItems">  {{ fileName }}  </span>
           <input type="file" id="fileinput" style="display:none;"  @change="onFileChange"/>
           <el-button class="formItems" id="removeBtn" icon="el-icon-document-copy" size="small" round @click="removeFile">Delete</el-button>
         </el-form-item>
@@ -22,8 +22,8 @@
           <el-button class="formItems" round type="primary" @click="submitForm">Submit</el-button>
         </el-form-item>
       </el-form>
-      <el-button class="formItems" round type="primary" @click="checkTaskStatus">Check Task Status</el-button>
     </div>
+    <span class="formItems" style="display:none;">{{ checkResult }}</span>
     <div v-if="checkResult" id="checkerGraph">
     </div>
     <div v-if="checkResult" id="raList">
@@ -47,7 +47,20 @@ export default {
       checkResult: ''
     };
   },
+
+  watch: {
+    checkResult: function (newValue, oldValue) {
+      if (oldValue == "") {
+        this.waitForResult()
+      }
+    }
+  },
+
   methods: {
+    onLabelChange() {
+
+    },
+
     checkFile() {
       document.querySelector('#fileinput').click()
     },
@@ -79,26 +92,50 @@ export default {
 
     sendForm(jsonForm) {
       console.log(jsonForm)
+      var vm = this;
       client.post('/post', jsonForm)
-      .then(function (response) {
-        console.log(response);
+      .then(function (res) {
+        console.log(res);
+        vm.checkResult = res.data.message
       })
       .catch(function (error) {
         console.log(error);
       });
     },
 
-    sendForm(jsonForm) {
-      console.log(jsonForm)
-      client.post('/post', jsonForm)
-      .then(function (response) {
-        console.log(response);
+    checkTaskStatus(load) {
+      var vm = this;
+      client.get('/checkResult')
+      .then(function (res) {
+        console.log(res);
+        load.close()
+        if (res.status == 200 && res.data.status == "finished") {
+            vm.checkResult = res.data.status
+            // draw
+        } else if (res.data.status == "failed") {
+          vm.checkResult = ""
+          vm.$alert('Task job failed.' + res.data.data, 'Alert', {
+            confirmButtonText: 'OK'
+          });
+        } else {
+          vm.checkResult = ""
+          vm.$alert('Task job failed. Please check your inputs and try again.', 'Alert', {
+            confirmButtonText: 'OK'
+          });
+        }
       })
-      .catch(function (error) {
-        console.log(error);
-      });
     },
-    
+
+    waitForResult() {
+      const load = this.$loading({
+        lock: true,
+        text: 'Your Diagnostic Task is Running',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+      this.checkTaskStatus(load)
+    },
+
     submitForm() {
       for (var item in this.formItems) {
         console.log(item)
@@ -109,7 +146,6 @@ export default {
           return
         }
       }
-
       var jsonForm = JSON.stringify([
         {
           itemName : "vsystemURL",
@@ -125,15 +161,6 @@ export default {
         },
       ]);
       this.sendForm(jsonForm)
-    },
-
-    checkTaskStatus() {
-      client.get('/checkResult')
-      .then(function (res) {
-        if (res.status == 200){
-          console.log(res.data);
-        }
-      })
     }
   }
 }
