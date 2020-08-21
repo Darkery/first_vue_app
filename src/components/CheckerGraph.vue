@@ -24,9 +24,11 @@
       </el-form>
     </div>
     <span class="formItems" style="display:none;">{{ checkResult }}</span>
-    <div v-if="checkResult" id="checkerGraph">
-    </div>
-    <div v-if="checkResult" id="raList">
+    <div v-if="checkResult" id="checkerGraph"></div>
+    <div v-if="checkResult" id="rcaList">
+      <h4>RCA List:</h4>
+      <el-row>{{this.rcaList}}</el-row>
+      <el-row><el-button class="formItems" round type="primary" @click="backBtn">Back</el-button></el-row>
     </div>
   </div>
 </template>
@@ -44,7 +46,8 @@ export default {
         configFile: ''
       },
       fileName: '',
-      checkResult: ''
+      checkResult: '',
+      rcaList: ''
     };
   },
 
@@ -57,8 +60,13 @@ export default {
   },
 
   methods: {
-    onLabelChange() {
+    drawRcaTable() {
 
+    },
+
+    backBtn() {
+      this.checkResult = ''
+      this.rcaList = ''
     },
 
     checkFile() {
@@ -103,6 +111,88 @@ export default {
       });
     },
 
+    drawCheckerGraph(responseData) {
+      var data_k8s = JSON.parse(responseData).k8s_runtimeGraph
+      var data_vsystem = JSON.parse(responseData).vsystem_runtimeGraph
+      const echarts = require('echarts');
+      var myChart = echarts.init(document.getElementById('checkerGraph'));
+      
+      let option = {
+        tooltip: {
+          trigger: 'item',
+          triggerOn: 'mousemove'
+        },
+        legend: {
+          top: '2%',
+          left: '3%',
+          orient: 'vertical',
+          data: [{
+            name: 'k8s_checker_graph',
+            icon: 'rectangle'
+          },
+          {
+            name: 'vsystem_checker_graph',
+            icon: 'rectangle'
+          }],
+          borderColor: '#c23531'
+        },
+        series:[
+          {
+            type: 'tree',
+            name: 'k8s_checker_graph',
+            data: [data_vsystem],
+            top: '5%',
+            left: '7%',
+            bottom: '2%',
+            right: '60%',
+            symbolSize: 7,
+            label: {
+              position: 'left',
+              verticalAlign: 'middle',
+              align: 'right'
+            },
+            leaves: {
+              label: {
+                position: 'right',
+                verticalAlign: 'middle',
+                align: 'left'
+              }
+            },
+            expandAndCollapse: true,
+            animationDuration: 550,
+            animationDurationUpdate: 750
+  
+          },
+          {
+            type: 'tree',
+            name: 'vsystem_checker_graph',
+            data: [data_k8s],
+            top: '20%',
+            left: '60%',
+            bottom: '22%',
+            right: '18%',
+            symbolSize: 7,
+            label: {
+              position: 'left',
+              verticalAlign: 'middle',
+              align: 'right'
+            },
+            leaves: {
+              label: {
+                position: 'right',
+                verticalAlign: 'middle',
+                align: 'left'
+              }
+            },
+            expandAndCollapse: true,
+            animationDuration: 550,
+            animationDurationUpdate: 750
+          }
+        ]
+      };
+      myChart.setOption(option)
+    },
+
     checkTaskStatus(load) {
       var vm = this;
       client.get('/checkResult')
@@ -111,7 +201,8 @@ export default {
         load.close()
         if (res.status == 200 && res.data.status == "finished") {
             vm.checkResult = res.data.status
-            // draw
+            vm.drawCheckerGraph(res.data.data)
+            vm.rcaList = JSON.parse(res.data.data).rcaList.PairList
         } else if (res.data.status == "failed") {
           vm.checkResult = ""
           vm.$alert('Task job failed.' + res.data.data, 'Alert', {
