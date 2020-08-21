@@ -9,7 +9,8 @@ import {
   Message,
   MessageBox,
   Row,
-  Col
+  Col,
+  Loading
   // Icon,
   // Card,
   // Table,
@@ -43,3 +44,4 @@ Vue.prototype.$msgbox = MessageBox;
 Vue.prototype.$alert = MessageBox.alert;
 Vue.prototype.$confirm = MessageBox.confirm;
 Vue.prototype.$prompt = MessageBox.prompt;
+Vue.prototype.$loading = Loading.service
