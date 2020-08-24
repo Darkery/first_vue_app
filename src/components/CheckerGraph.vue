@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="!checkResult" id="inputDiv">
-      <h2>Plese input the following needed items:</h2>
+      <h2>Please input the following needed items:</h2>
       <el-form>
         <el-form-item>
           <label class="formItems">Vsystm URL:</label>
@@ -25,11 +25,24 @@
     </div>
     <span class="formItems" style="display:none;">{{ checkResult }}</span>
     <div v-if="checkResult" id="checkerGraph"></div>
-    <div v-if="checkResult" id="rcaList">
+    <div v-if="checkResult" id="rcaListDiv">
       <h4>RCA List:</h4>
-      <el-row>{{this.rcaList}}</el-row>
-      <el-row><el-button class="formItems" round type="primary" @click="backBtn">Back</el-button></el-row>
+      <el-table
+      :data="tableData"
+      style="width: 100%">
+      <el-table-column
+        prop="rca"
+        label="RCA"
+        width="600">
+      </el-table-column>
+      <el-table-column
+        prop="vote"
+        label="Votes"
+        width="200">
+      </el-table-column>
+      </el-table>
     </div>
+    <div v-if="checkResult"><el-button class="formItems" round type="primary" @click="backBtn">Back</el-button></div>
   </div>
 </template>
 
@@ -47,7 +60,9 @@ export default {
       },
       fileName: '',
       checkResult: '',
-      rcaList: ''
+      rcaList: '',
+      tableData: '',
+      myChart: ''
     };
   },
 
@@ -67,6 +82,7 @@ export default {
     backBtn() {
       this.checkResult = ''
       this.rcaList = ''
+      this.myChart.dispose()
     },
 
     checkFile() {
@@ -115,7 +131,7 @@ export default {
       var data_k8s = JSON.parse(responseData).k8s_runtimeGraph
       var data_vsystem = JSON.parse(responseData).vsystem_runtimeGraph
       const echarts = require('echarts');
-      var myChart = echarts.init(document.getElementById('checkerGraph'));
+      this.myChart = echarts.init(document.getElementById('checkerGraph'));
       
       let option = {
         tooltip: {
@@ -190,7 +206,7 @@ export default {
           }
         ]
       };
-      myChart.setOption(option)
+      this.myChart.setOption(option)
     },
 
     checkTaskStatus(load) {
@@ -203,6 +219,20 @@ export default {
             vm.checkResult = res.data.status
             vm.drawCheckerGraph(res.data.data)
             vm.rcaList = JSON.parse(res.data.data).rcaList.PairList
+            console.log("rcaList: ")
+            console.log(vm.rcaList)
+            console.log("rcaList end")
+            var rcaTableData = []
+            for (var key in vm.rcaList) {
+              var rcaTableItem = new Object();
+              rcaTableItem.rca = vm.rcaList[key].Key
+              rcaTableItem.vote = vm.rcaList[key].Value
+              rcaTableData.push(rcaTableItem)
+              console.log("rcaTableData:")
+              console.log(rcaTableData)
+              console.log("rcaTableData end")
+            }
+            vm.tableData = rcaTableData
         } else if (res.data.status == "failed") {
           vm.checkResult = ""
           vm.$alert('Task job failed.' + res.data.data, 'Alert', {
@@ -270,16 +300,16 @@ export default {
   height: 600px;
   text-align: left;
   border-style: solid;
-  border-width: 2px;
-  border-color: blue;
+  border-width: 0.5px;
+  border-color: #409EFF;
 }
-#raList {
+#rcaListDiv {
   margin: auto;
-  width: 900px;
-  text-align: left;
-  border-style: solid;
-  border-width: 2px;
-  border-color: blue;
+  width: 800px;
+  text-align: center;
+  /* border-style: solid; */
+  border-width: 0.5px;
+  border-color: #409EFF;
 }
 .formItems {
   font-size:15px;

@@ -3,7 +3,7 @@
     <div id="logo">
       <el-row>
         <el-col :span="10"><img style="height: 200px;" src="./assets/logo.png"></el-col>
-        <el-col :span="14"><h1>Diagnostic Center</h1></el-col>
+        <el-col :span="14"><h1>DI Diagnostic Center</h1></el-col>
       </el-row>
     </div>
     <div>
