@@ -10,14 +10,14 @@ import {
   MessageBox,
   Row,
   Col,
-  Loading
-  // Icon,
-  // Card,
-  // Table,
-  // TableColumn,
-  // TabPane,
-  // Tabs,
-  // Tag,
+  Loading,
+  Icon,
+  Card,
+  Table,
+  TableColumn,
+  TabPane,
+  Tabs,
+  Tag,
 } from 'element-ui'
 import lang from 'element-ui/lib/locale/lang/en'
 import locale from 'element-ui/lib/locale'
@@ -31,13 +31,13 @@ Vue.use(Form)
 Vue.use(FormItem)
 Vue.use(Row)
 Vue.use(Col)
-// Vue.use(Icon)
-// Vue.use(Card)
-// Vue.use(Table)
-// Vue.use(TableColumn)
-// Vue.use(TabPane)
-// Vue.use(Tabs)
-// Vue.use(Tag)
+Vue.use(Icon)
+Vue.use(Card)
+Vue.use(Table)
+Vue.use(TableColumn)
+Vue.use(TabPane)
+Vue.use(Tabs)
+Vue.use(Tag)
 
 Vue.prototype.$message = Message
 Vue.prototype.$msgbox = MessageBox;
