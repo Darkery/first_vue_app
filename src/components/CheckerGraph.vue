@@ -4,11 +4,7 @@
       <h2>Please input the following needed items:</h2>
       <el-form>
         <el-form-item>
-          <label class="formItems">Vsystm URL:</label>
-          <el-input class="formItems" v-model="formItems.vsystemUrl" placeholder="please edit here..."></el-input>
-        </el-form-item>
-        <el-form-item>
-          <label class="formItems">Vsystm Password:</label>
+          <label class="formItems">Vsystm Password of System Tenant System User:</label>
           <el-input class="formItems" v-model="formItems.vsystemPassword" show-password placeholder="please edit here..."></el-input>
         </el-form-item>
         <el-form-item>
@@ -54,7 +50,6 @@ export default {
   data() {
     return {
       formItems: {
-        vsystemUrl: '',
         vsystemPassword: '',
         configFile: ''
       },
@@ -262,10 +257,6 @@ export default {
         }
       }
       var jsonForm = JSON.stringify([
-        {
-          itemName : "vsystemURL",
-          itemValue : this.formItems.vsystemUrl
-        },
         {
           itemName : "password",
           itemValue : this.formItems.vsystemPassword
