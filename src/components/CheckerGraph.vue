@@ -115,12 +115,12 @@ export default {
     },
 
     sendForm(jsonForm) {
-      console.log(jsonForm)
       var vm = this;
       client.post('/post', jsonForm)
       .then(function (res) {
-        console.log(res);
+        console.log(res.data.message)
         vm.checkResult = res.data.message
+        vm.tableData = ''
       })
       .catch(function (error) {
         console.log(error);
@@ -219,18 +219,12 @@ export default {
             vm.checkResult = res.data.status
             vm.drawCheckerGraph(res.data.data)
             vm.rcaList = JSON.parse(res.data.data).rcaList.PairList
-            console.log("rcaList: ")
-            console.log(vm.rcaList)
-            console.log("rcaList end")
             var rcaTableData = []
             for (var key in vm.rcaList) {
               var rcaTableItem = new Object();
               rcaTableItem.rca = vm.rcaList[key].Key
               rcaTableItem.vote = vm.rcaList[key].Value
               rcaTableData.push(rcaTableItem)
-              console.log("rcaTableData:")
-              console.log(rcaTableData)
-              console.log("rcaTableData end")
             }
             vm.tableData = rcaTableData
         } else if (res.data.status == "failed") {
