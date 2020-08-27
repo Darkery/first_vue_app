@@ -7,11 +7,15 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
-    "echarts": "^4.8.0",
     "axios": "^0.19.2",
     "core-js": "^3.6.4",
+    "echarts": "^4.8.0",
+    "element-ui": "^2.13.2",
+    "vis-data": "^7.0.0",
+    "vis-network": "^8.2.0",
+    "vis-util": "^4.3.4",
     "vue": "^2.6.11",
-    "element-ui": "^2.13.2"
+    "vue-vis-network": "^1.0.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.3.0",
