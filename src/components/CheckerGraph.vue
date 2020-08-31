@@ -89,7 +89,7 @@ export default {
       tableData: '',
       myChart: '',
       edges: [],
-			nodes: [],
+      nodes: []
     };
   },
 
@@ -187,19 +187,13 @@ export default {
             type: 'tree',
             name: 'k8s_checker_graph',
             data: [data_vsystem],
-            left: '8%',
+            left: '12%',
             right: '65%',
-            symbol: 'circle',
             symbolSize: 10,
             // initialTreeDepth: 3,
             roam: true,
             itemStyle: {
             },
-            // emphasis: {
-            //   itemStyle: {
-            //     borderColor: '#ccc'
-            //   }
-            // }
             label: {
               fontSize: 15,
               position: 'left',
@@ -220,13 +214,9 @@ export default {
             data: [data_k8s],
             left: '60%',
             right: '20%',
-            symbol: 'circle',
             symbolSize: 10,
             // initialTreeDepth: 3,
             roam: true,
-            // itemStyle: {
-            //   borderWidth: 0
-            // },
             label: {
               fontSize: 15,
               position: 'left',
