@@ -21,13 +21,6 @@
     </div>
     <span class="formItems" style="display:none;">{{ checkResult }}</span>
 
-    <div v-if="checkResult" id="componentGraph"> 
-      <network ref="network"
-        :nodes="nodes"
-        :edges="edges"
-        :options="options"
-		  ></network>
-    </div>
     <div v-if="checkResult" id="wrapper">
       <div id="tags">
         <el-tag
