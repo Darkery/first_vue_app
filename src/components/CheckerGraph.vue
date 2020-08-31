@@ -20,6 +20,14 @@
       </el-form>
     </div>
     <span class="formItems" style="display:none;">{{ checkResult }}</span>
+
+    <div v-if="checkResult" id="componentGraph"> 
+      <network ref="network"
+        :nodes="nodes"
+        :edges="edges"
+        :options="options"
+		  ></network>
+    </div>
     <div v-if="checkResult" id="wrapper">
       <div id="tags">
         <el-tag
@@ -31,6 +39,13 @@
         </el-tag>
       </div>
       <div id="checkerGraph"></div>
+    </div>
+    <div v-if="checkResult" id="componentGraph"> 
+      <network ref="network"
+        :nodes="nodes"
+        :edges="edges"
+        :options="options"
+		  ></network>
     </div>
     <div v-if="checkResult" id="rcaListDiv">
       <h4>RCA List:</h4>
@@ -49,7 +64,10 @@
         </el-table-column>
       </el-table>
     </div>
-    <div v-if="checkResult"><el-button class="formItems" round type="primary" @click="backBtn">Back</el-button></div>
+
+    <div v-if="checkResult">
+      <el-button class="formItems" round type="primary" @click="backBtn">Back</el-button>
+    </div>
   </div>
 </template>
 
@@ -60,6 +78,9 @@ export default {
   name: 'CheckGraph',
   data() {
     return {
+      options: {
+				height: "1200px",
+			},
       formItems: {
         vsystemPassword: '',
         configFile: ''
@@ -73,7 +94,9 @@ export default {
       checkResult: '',
       rcaList: '',
       tableData: '',
-      myChart: ''
+      myChart: '',
+      edges: [],
+			nodes: [],
     };
   },
 
@@ -86,9 +109,6 @@ export default {
   },
 
   methods: {
-    drawRcaTable() {
-
-    },
 
     backBtn() {
       this.checkResult = ''
@@ -237,7 +257,6 @@ export default {
       var vm = this;
       client.get('/checkResult')
       .then(function (res) {
-        console.log(res);
         load.close()
         if (res.status == 200 && res.data.status == "finished") {
             vm.checkResult = res.data.status
@@ -251,6 +270,8 @@ export default {
               rcaTableData.push(rcaTableItem)
             }
             vm.tableData = rcaTableData
+            vm.edges = JSON.parse(res.data.data).componentsGraph.edges;
+            vm.nodes = JSON.parse(res.data.data).componentsGraph.nodes;
         } else if (res.data.status == "failed") {
           vm.checkResult = ""
           vm.$alert('Task job failed.' + res.data.data, 'Alert', {
@@ -325,6 +346,15 @@ export default {
   margin: auto;
   width: 800px;
   text-align: center;
+}
+#componentGraph {
+  margin: auto;
+  /* width: 800px; */
+  height: 1200px;
+  text-align: left;
+  border-style: solid;
+  border-width: 0.5px;
+  border-color: #409EFF;
 }
 .formItems {
   font-size:15px;
