@@ -14,13 +14,12 @@
           <input type="file" id="fileinput" style="display:none;"  @change="onFileChange"/>
           <el-button class="formItems" id="removeBtn" icon="el-icon-document-copy" size="small" round @click="removeFile">Delete</el-button>
         </el-form-item>
-        <el-form-item style="text-align: right;">
+        <el-form-item style="text-align:right;">
           <el-button class="formItems" round type="primary" @click="submitForm">Submit</el-button>
         </el-form-item>
       </el-form>
     </div>
     <span class="formItems" style="display:none;">{{ checkResult }}</span>
-    <div v-if="checkResult" id="checkerGraph"></div>
 
     <div v-if="checkResult" id="componentGraph"> 
       <network ref="network"
@@ -29,22 +28,40 @@
         :options="options"
 		  ></network>
     </div>
-
+    <div v-if="checkResult" id="wrapper">
+      <div id="tags">
+        <el-tag
+          v-for="item in tagItems"
+          :key="item.label"
+          :type="item.type"
+          effect="dark">
+          {{ item.label }}
+        </el-tag>
+      </div>
+      <div id="checkerGraph"></div>
+    </div>
+    <div v-if="checkResult" id="componentGraph"> 
+      <network ref="network"
+        :nodes="nodes"
+        :edges="edges"
+        :options="options"
+		  ></network>
+    </div>
     <div v-if="checkResult" id="rcaListDiv">
       <h4>RCA List:</h4>
       <el-table
       :data="tableData"
       style="width: 100%">
-      <el-table-column
-        prop="rca"
-        label="RCA"
-        width="600">
-      </el-table-column>
-      <el-table-column
-        prop="vote"
-        label="Votes"
-        width="200">
-      </el-table-column>
+        <el-table-column
+          prop="rca"  
+          label="RCA"
+          width="600">
+        </el-table-column>
+        <el-table-column
+          prop="vote"
+          label="Votes"
+          width="200">
+        </el-table-column>
       </el-table>
     </div>
 
@@ -68,6 +85,11 @@ export default {
         vsystemPassword: '',
         configFile: ''
       },
+      tagItems: [
+        { type: 'success', label: 'Finished' },
+        { type: 'info', label: 'Skipped' },
+        { type: 'danger', label: 'Failed' }
+      ],
       fileName: '',
       checkResult: '',
       rcaList: '',
@@ -143,35 +165,50 @@ export default {
       this.myChart = echarts.init(document.getElementById('checkerGraph'));
       
       let option = {
+        title: {
+          text: 'Checker Result',
+          subtext: '',
+          top: 10,
+          left: 10,
+          textStyle: {
+            fontSize: 20
+          }
+        },
         tooltip: {
           trigger: 'item',
           triggerOn: 'mousemove'
         },
-        legend: {
-          top: '2%',
-          left: '3%',
-          orient: 'vertical',
-          data: [{
-            name: 'k8s_checker_graph',
-            icon: 'rectangle'
-          },
+        legend: [
           {
-            name: 'vsystem_checker_graph',
-            icon: 'rectangle'
-          }],
-          borderColor: '#c23531'
-        },
+            top: '40',
+            left: '10',
+            orient: 'horizontal',
+            icon: 'roundRect',
+            textStyle: {
+              fontSize: 15
+            }
+          }
+        ],
         series:[
           {
             type: 'tree',
             name: 'k8s_checker_graph',
             data: [data_vsystem],
-            top: '5%',
-            left: '7%',
-            bottom: '2%',
-            right: '60%',
-            symbolSize: 7,
+            left: '8%',
+            right: '65%',
+            symbol: 'circle',
+            symbolSize: 10,
+            // initialTreeDepth: 3,
+            roam: true,
+            itemStyle: {
+            },
+            // emphasis: {
+            //   itemStyle: {
+            //     borderColor: '#ccc'
+            //   }
+            // }
             label: {
+              fontSize: 15,
               position: 'left',
               verticalAlign: 'middle',
               align: 'right'
@@ -182,22 +219,23 @@ export default {
                 verticalAlign: 'middle',
                 align: 'left'
               }
-            },
-            expandAndCollapse: true,
-            animationDuration: 550,
-            animationDurationUpdate: 750
-  
+            }
           },
           {
             type: 'tree',
             name: 'vsystem_checker_graph',
             data: [data_k8s],
-            top: '20%',
             left: '60%',
-            bottom: '22%',
-            right: '18%',
-            symbolSize: 7,
+            right: '20%',
+            symbol: 'circle',
+            symbolSize: 10,
+            // initialTreeDepth: 3,
+            roam: true,
+            // itemStyle: {
+            //   borderWidth: 0
+            // },
             label: {
+              fontSize: 15,
               position: 'left',
               verticalAlign: 'middle',
               align: 'right'
@@ -208,10 +246,7 @@ export default {
                 verticalAlign: 'middle',
                 align: 'left'
               }
-            },
-            expandAndCollapse: true,
-            animationDuration: 550,
-            animationDurationUpdate: 750
+            }
           }
         ]
       };
@@ -294,22 +329,23 @@ export default {
   width: 800px;
   text-align: left;
 }
+#wrapper {
+  position: relative;
+}
 #checkerGraph {
   margin: auto;
-  /* width: 900px; */
-  height: 600px;
+  height: 1200px;
   text-align: left;
-  border-style: solid;
-  border-width: 0.5px;
-  border-color: #409EFF;
+}
+#tags {
+  position: absolute;
+  top: 70px;
+  left: 15px;
 }
 #rcaListDiv {
   margin: auto;
   width: 800px;
   text-align: center;
-  /* border-style: solid; */
-  border-width: 0.5px;
-  border-color: #409EFF;
 }
 #componentGraph {
   margin: auto;
