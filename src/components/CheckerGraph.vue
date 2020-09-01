@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!checkResult" id="inputDiv">
+    <div v-if="!requestResult" id="inputDiv">
       <h2>Please input the following needed items:</h2>
       <el-form>
         <el-form-item>
@@ -19,47 +19,46 @@
         </el-form-item>
       </el-form>
     </div>
-    <span class="formItems" style="display:none;">{{ checkResult }}</span>
-
-    <div v-if="checkResult" id="wrapper">
-      <div id="tags">
-        <el-tag
-          v-for="item in tagItems"
-          :key="item.label"
-          :type="item.type"
-          effect="dark">
-          {{ item.label }}
-        </el-tag>
-      </div>
-      <div id="checkerGraph"></div>
-    </div>
-    <div v-if="checkResult" id="componentGraph"> 
-      <network ref="network"
-        :nodes="nodes"
-        :edges="edges"
-        :options="options"
-		  ></network>
-    </div>
-    <div v-if="checkResult" id="rcaListDiv">
-      <h4>RCA List:</h4>
-      <el-table
-      :data="tableData"
-      style="width: 100%">
-        <el-table-column
-          prop="rca"  
-          label="RCA"
-          width="600">
-        </el-table-column>
-        <el-table-column
-          prop="vote"
-          label="Votes"
-          width="200">
-        </el-table-column>
-      </el-table>
-    </div>
-
     <div v-if="checkResult">
-      <el-button class="formItems" round type="primary" @click="backBtn">Back</el-button>
+      <div id="wrapper">
+        <div id="tags">
+          <el-tag
+            v-for="item in tagItems"
+            :key="item.label"
+            :type="item.type"
+            effect="dark">
+            {{ item.label }}
+          </el-tag>
+        </div>
+        <div id="checkerGraph"></div>
+      </div>
+      <div id="componentGraph"> 
+        <network ref="network"
+          :nodes="nodes"
+          :edges="edges"
+          :options="options"
+        ></network>
+      </div>
+      <div id="rcaListDiv">
+        <h4>Root Cause List:</h4>
+        <el-table
+        :data="tableData"
+        style="width: 100%">
+          <el-table-column
+            prop="rca"  
+            label="Root Cause Analysis"
+            width="600">
+          </el-table-column>
+          <el-table-column
+            prop="vote"
+            label="Votes"
+            width="200">
+          </el-table-column>
+        </el-table>
+      </div>
+      <div>
+        <el-button class="formItems" round type="primary" @click="backBtn">Back</el-button>
+      </div>
     </div>
   </div>
 </template>
@@ -85,6 +84,7 @@ export default {
       ],
       fileName: '',
       checkResult: '',
+      requestResult: '',
       rcaList: '',
       tableData: '',
       myChart: '',
@@ -94,6 +94,11 @@ export default {
   },
 
   watch: {
+    requestResult: function (newValue, oldValue) {
+      if (oldValue == "") {
+        this.waitForResult()
+      }
+    },
     checkResult: function (newValue, oldValue) {
       if (oldValue == "") {
         this.waitForResult()
@@ -104,8 +109,10 @@ export default {
   methods: {
 
     backBtn() {
+      this.requestResult = ''
       this.checkResult = ''
       this.rcaList = ''
+      this.tableData = ''
       this.myChart.dispose()
     },
 
@@ -143,11 +150,13 @@ export default {
       client.post('/post', jsonForm)
       .then(function (res) {
         console.log(res.data.message)
-        vm.checkResult = res.data.message
-        vm.tableData = ''
+        vm.requestResult = res.data.message
       })
       .catch(function (error) {
         console.log(error);
+        vm.$alert('Send Request failed.' + error, 'Alert', {
+          confirmButtonText: 'OK'
+        });
       });
     },
 
@@ -187,10 +196,10 @@ export default {
             type: 'tree',
             name: 'k8s_checker_graph',
             data: [data_vsystem],
-            left: '12%',
+            left: '14%',
             right: '65%',
             symbolSize: 10,
-            // initialTreeDepth: 3,
+            initialTreeDepth: 2,
             roam: true,
             itemStyle: {
             },
@@ -215,7 +224,7 @@ export default {
             left: '60%',
             right: '20%',
             symbolSize: 10,
-            // initialTreeDepth: 3,
+            initialTreeDepth: 2,
             roam: true,
             label: {
               fontSize: 15,
@@ -318,6 +327,7 @@ export default {
 #checkerGraph {
   margin: auto;
   height: 1200px;
+  width: 95%;
   text-align: left;
 }
 #tags {
@@ -335,7 +345,7 @@ export default {
   /* width: 800px; */
   height: 1200px;
   text-align: left;
-  border-style: solid;
+  /* border-style: solid; */
   border-width: 0.5px;
   border-color: #409EFF;
 }
