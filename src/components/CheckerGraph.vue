@@ -33,10 +33,16 @@
       </div>
       <div id="checkerGraph"></div>
     </div>
+    <div v-if="checkResult" id="app"><br>　　
+      <select v-model="selected" @change='changeComponentGraphView'>
+      　　<option>--Please Select--</option>
+      　　<option v-for="item in optList">{{ item }}</option>
+  　　</select><br>
+    </div>
     <div v-if="checkResult" id="componentGraph"> 
       <network ref="network"
-        :nodes="nodes"
-        :edges="edges"
+        :nodes="comGraph.nodes"
+        :edges="comGraph.edges"
         :options="options"
 		  ></network>
     </div>
@@ -88,8 +94,18 @@ export default {
       rcaList: '',
       tableData: '',
       myChart: '',
-      edges: [],
-      nodes: []
+      comGraph: {
+        edges: [],
+        nodes: [],
+        edgesComplete: [],
+        nodesComplete: [],
+        edgesK8s: [],
+        nodesK8s: [],
+        edgesVsystem: [],
+        nodesVsystem: []
+      },
+      selected: '',    
+      optList: ['Complete View', 'K8s View', 'Vsystem View', 'Issue View']
     };
   },
 
@@ -102,6 +118,22 @@ export default {
   },
 
   methods: {
+
+    changeComponentGraphView: function () {
+      if (this.selected == "K8s View") {
+        this.comGraph.nodes = this.comGraph.nodesK8s
+        this.comGraph.edges = this.comGraph.edgesK8s
+      } else if (this.selected == "Vsystem View") {
+        this.comGraph.nodes = this.comGraph.nodesVsystem
+        this.comGraph.edges = this.comGraph.edgesVsystem
+      } else if (this.selected == "Issue View") {
+        this.comGraph.nodes = this.comGraph.nodesComplete
+        this.comGraph.edges = this.comGraph.edgesComplete
+      } else {
+        this.comGraph.nodes = this.comGraph.nodesComplete
+        this.comGraph.edges = this.comGraph.edgesComplete
+      }
+    },
 
     backBtn() {
       this.checkResult = ''
@@ -253,8 +285,29 @@ export default {
               rcaTableData.push(rcaTableItem)
             }
             vm.tableData = rcaTableData
-            vm.edges = JSON.parse(res.data.data).componentsGraph.edges;
-            vm.nodes = JSON.parse(res.data.data).componentsGraph.nodes;
+            vm.comGraph.edges = JSON.parse(res.data.data).componentsGraph.edges;
+            vm.comGraph.nodes = JSON.parse(res.data.data).componentsGraph.nodes;
+            vm.comGraph.edgesComplete = JSON.parse(res.data.data).componentsGraph.edges;
+            vm.comGraph.nodesComplete = JSON.parse(res.data.data).componentsGraph.nodes;
+            for (var i in vm.comGraph.nodesComplete) {
+              if (vm.comGraph.nodesComplete[i].id.indexOf("cluster")==0 || vm.comGraph.nodesComplete[i].id.indexOf("node")==0 || vm.comGraph.nodesComplete[i].id.indexOf("pod")==0 || vm.comGraph.nodesComplete[i].id.indexOf("container")==0) {
+                vm.comGraph.nodesK8s.push(vm.comGraph.nodesComplete[i])
+                if (vm.comGraph.nodesComplete[i].id.indexOf("cluster")==0) {
+                  vm.comGraph.nodesVsystem.push(vm.comGraph.nodesComplete[i])
+                }
+              } else if (vm.comGraph.nodesComplete[i].id.indexOf("cluster")==0 || vm.comGraph.nodesComplete[i].id.indexOf("tenant")==0 || vm.comGraph.nodesComplete[i].id.indexOf("user")==0 || vm.comGraph.nodesComplete[i].id.indexOf("app")==0) {
+                vm.comGraph.nodesVsystem.push(vm.comGraph.nodesComplete[i])
+              }
+            }
+            for (var i in vm.comGraph.edgesComplete) {
+              if ((vm.comGraph.edgesComplete[i].from.indexOf("cluster")==0 || vm.comGraph.edgesComplete[i].from.indexOf("node")==0 || vm.comGraph.edgesComplete[i].from.indexOf("pod")==0 || vm.comGraph.edgesComplete[i].from.indexOf("container")==0) 
+                    && (vm.comGraph.edgesComplete[i].to.indexOf("node")==0 || vm.comGraph.edgesComplete[i].to.indexOf("pod")==0 || vm.comGraph.edgesComplete[i].to.indexOf("container")==0)) {
+                vm.comGraph.edgesK8s.push(vm.comGraph.edgesComplete[i])
+              } else if ((vm.comGraph.edgesComplete[i].from.indexOf("cluster")==0 || vm.comGraph.edgesComplete[i].from.indexOf("tenant")==0 || vm.comGraph.edgesComplete[i].from.indexOf("user")==0 || vm.comGraph.edgesComplete[i].from.indexOf("app")==0) 
+                    && (vm.comGraph.edgesComplete[i].to.indexOf("tenant")==0 || vm.comGraph.edgesComplete[i].to.indexOf("user")==0 || vm.comGraph.edgesComplete[i].to.indexOf("app")==0)) {
+                vm.comGraph.edgesVsystem.push(vm.comGraph.edgesComplete[i])
+              }
+            }
         } else if (res.data.status == "failed") {
           vm.checkResult = ""
           vm.$alert('Task job failed.' + res.data.data, 'Alert', {
