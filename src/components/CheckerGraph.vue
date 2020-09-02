@@ -19,52 +19,61 @@
         </el-form-item>
       </el-form>
     </div>
-    <div v-if="checkResult">
-      <div id="wrapper">
-        <div id="tags">
-          <el-tag
-            v-for="item in tagItems"
-            :key="item.label"
-            :type="item.type"
-            effect="dark">
-            {{ item.label }}
-          </el-tag>
-        </div>
-        <div id="checkerGraph"></div>
-      </div>
-      <div id="app"><br>　　
-        <select v-model="selected" @change='changeComponentGraphView'>
-          <option>--Please Select--</option>
-          <option v-for="item in optList">{{ item }}</option>
-      </select><br>
-      </div>      
-      <div id="componentGraph"> 
-        <network ref="network"
-          :nodes="comGraph.nodes"
-          :edges="comGraph.edges"
-          :options="options"
-        ></network>
-      </div>
-      <div id="rcaListDiv">
-        <h4>Root Cause List:</h4>
-        <el-table
-        :data="tableData"
-        style="width: 100%">
-          <el-table-column
-            prop="rca"  
-            label="Root Cause Analysis"
-            width="600">
-          </el-table-column>
-          <el-table-column
-            prop="vote"
-            label="Votes"
-            width="200">
-          </el-table-column>
-        </el-table>
-      </div>
-      <div>
+    <div v-if="requestResult">
+      <el-col :span="24">
+        <el-tabs type="border-card">
+          <el-tab-pane label="Checkers Runtime">
+            <div style="position: relative;">
+              <div v-if="checkResult" id="tags">
+                <el-tag
+                  v-for="item in tagItems"
+                  :key="item.label"
+                  :type="item.type"
+                  effect="dark">
+                  {{ item.label }}
+                </el-tag>
+              </div>
+              <div id="checkerGraph"></div>
+            </div>
+          </el-tab-pane>
+          <el-tab-pane label="Entities Relationship">
+            <div> 
+              <div style="margin-bottom:10px;">　
+                <el-dropdown trigger="click" @command="handleCommand">
+                  <el-button type="primary">
+                    Select View<i class="el-icon-arrow-down el-icon--right"></i>
+                  </el-button>
+                  <el-dropdown-menu slot="dropdown">
+                    <el-dropdown-item command="Complete View">Complete View</el-dropdown-item>
+                    <el-dropdown-item command="Issue View">Issue View</el-dropdown-item>
+                    <el-dropdown-item command="K8s View">K8s View</el-dropdown-item>
+                    <el-dropdown-item command="Vsystem View">Vsystem View</el-dropdown-item>
+                  </el-dropdown-menu>
+                </el-dropdown>
+              </div>    
+              <network ref="network"
+                :nodes="comGraph.nodes"
+                :edges="comGraph.edges"
+                :options="comGraph.options"
+              ></network>
+            </div>
+          </el-tab-pane>
+          <el-tab-pane label="Root Cause Analysis">
+            <el-col>
+              <h3 style="text-align:center;">Root Cause List:</h3>
+              <el-col :span="16" :offset="5">
+                <el-table :data="tableData" stripe style="width:100%">
+                  <el-table-column prop="rca" width="700" label="Root Cause Analysis"></el-table-column>
+                  <el-table-column prop="vote" width="100" label="Votes"></el-table-column>
+                </el-table>
+              </el-col>
+            </el-col>
+          </el-tab-pane>
+        </el-tabs>
+      </el-col>
+      <el-col style="margin:20px;">
         <el-button class="formItems" round type="primary" @click="backBtn">Back</el-button>
-      </div>
+      </el-col>
     </div>
   </div>
 </template>
@@ -76,9 +85,6 @@ export default {
   name: 'CheckGraph',
   data() {
     return {
-      options: {
-				height: "1200px",
-			},
       formItems: {
         vsystemPassword: '',
         configFile: ''
@@ -89,12 +95,15 @@ export default {
         { type: 'danger', label: 'Failed' }
       ],
       fileName: '',
-      checkResult: '',
       requestResult: '',
+      checkResult: '',
       rcaList: '',
       tableData: '',
       myChart: '',
       comGraph: {
+        options: {
+          height: "1200px",
+        },
         edges: [],
         nodes: [],
         edgesComplete: [],
@@ -104,8 +113,7 @@ export default {
         edgesVsystem: [],
         nodesVsystem: []
       },
-      selected: '',    
-      optList: ['Complete View', 'K8s View', 'Vsystem View', 'Issue View']
+      load: '',
     };
   },
 
@@ -114,24 +122,23 @@ export default {
       if (oldValue == "") {
         this.waitForResult()
       }
-    },
-    checkResult: function (newValue, oldValue) {
-      if (oldValue == "") {
-        this.waitForResult()
-      }
     }
+    // checkResult: function (newValue, oldValue) {
+    //   if (oldValue == "") {
+    //     this.waitForResult()
+    //   }
+    // }
   },
 
   methods: {
-
-    changeComponentGraphView: function () {
-      if (this.selected == "K8s View") {
+    handleCommand(command) {
+      if (command == "K8s View") {
         this.comGraph.nodes = this.comGraph.nodesK8s
         this.comGraph.edges = this.comGraph.edgesK8s
-      } else if (this.selected == "Vsystem View") {
+      } else if (command == "Vsystem View") {
         this.comGraph.nodes = this.comGraph.nodesVsystem
         this.comGraph.edges = this.comGraph.edgesVsystem
-      } else if (this.selected == "Issue View") {
+      } else if (command == "Issue View") {
         this.comGraph.nodes = this.comGraph.nodesComplete
         this.comGraph.edges = this.comGraph.edgesComplete
       } else {
@@ -277,11 +284,11 @@ export default {
       this.myChart.setOption(option)
     },
 
-    checkTaskStatus(load) {
+    checkTaskStatus() {
       var vm = this;
       client.get('/checkResult')
       .then(function (res) {
-        load.close()
+        vm.load.close()
         if (res.status == 200 && res.data.status == "finished") {
             vm.checkResult = res.data.status
             vm.drawCheckerGraph(res.data.data)
@@ -332,18 +339,17 @@ export default {
     },
 
     waitForResult() {
-      const load = this.$loading({
+      this.checkTaskStatus()
+    },
+
+    submitForm() {
+      this.load = this.$loading({
         lock: true,
         text: 'Your Diagnostic Task is Running',
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
-      });
-      this.checkTaskStatus(load)
-    },
-
-    submitForm() {
+      })
       for (var item in this.formItems) {
-        console.log(item)
         if (this.formItems[item] == '') {
           this.$alert('Please check your inputs without empty.', 'Alert', {
             confirmButtonText: 'OK'
@@ -374,13 +380,9 @@ export default {
   width: 800px;
   text-align: left;
 }
-#wrapper {
-  position: relative;
-}
 #checkerGraph {
   margin: auto;
   height: 1200px;
-  width: 95%;
   text-align: left;
 }
 #tags {
@@ -390,19 +392,12 @@ export default {
 }
 #rcaListDiv {
   margin: auto;
-  width: 800px;
   text-align: center;
-}
-#componentGraph {
-  margin: auto;
-  /* width: 800px; */
-  height: 1200px;
-  text-align: left;
-  /* border-style: solid; */
-  border-width: 0.5px;
-  border-color: #409EFF;
 }
 .formItems {
   font-size:15px;
+}
+.el-tab-pane {
+  height: 1200px;
 }
 </style>
