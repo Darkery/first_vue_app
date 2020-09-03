@@ -111,7 +111,10 @@ export default {
         edgesK8s: [],
         nodesK8s: [],
         edgesVsystem: [],
-        nodesVsystem: []
+        nodesVsystem: [],
+        edgesIssue: [],
+        nodesIssue: [],
+        nodesNameIssue: []
       },
       load: '',
     };
@@ -139,8 +142,8 @@ export default {
         this.comGraph.nodes = this.comGraph.nodesVsystem
         this.comGraph.edges = this.comGraph.edgesVsystem
       } else if (command == "Issue View") {
-        this.comGraph.nodes = this.comGraph.nodesComplete
-        this.comGraph.edges = this.comGraph.edgesComplete
+        this.comGraph.nodes = this.comGraph.nodesIssue
+        this.comGraph.edges = this.comGraph.edgesIssue
       } else {
         this.comGraph.nodes = this.comGraph.nodesComplete
         this.comGraph.edges = this.comGraph.edgesComplete
@@ -153,6 +156,17 @@ export default {
       this.rcaList = ''
       this.tableData = ''
       this.myChart.dispose()
+      this.comGraph.edges = []
+      this.comGraph.nodes = []
+      this.comGraph.edgesComplete = []
+      this.comGraph.nodesComplete = []
+      this.comGraph.edgesK8s = []
+      this.comGraph.nodesK8s = []
+      this.comGraph.edgesVsystem = []
+      this.comGraph.nodesVsystem = []
+      this.comGraph.edgesIssue = []
+      this.comGraph.nodesIssue = []
+      this.comGraph.nodesNameIssue = []
     },
 
     checkFile() {
@@ -305,6 +319,7 @@ export default {
             vm.comGraph.nodes = JSON.parse(res.data.data).componentsGraph.nodes;
             vm.comGraph.edgesComplete = JSON.parse(res.data.data).componentsGraph.edges;
             vm.comGraph.nodesComplete = JSON.parse(res.data.data).componentsGraph.nodes;
+            
             for (var i in vm.comGraph.nodesComplete) {
               if (vm.comGraph.nodesComplete[i].id.indexOf("cluster")==0 || vm.comGraph.nodesComplete[i].id.indexOf("node")==0 || vm.comGraph.nodesComplete[i].id.indexOf("pod")==0 || vm.comGraph.nodesComplete[i].id.indexOf("container")==0) {
                 vm.comGraph.nodesK8s.push(vm.comGraph.nodesComplete[i])
@@ -314,7 +329,15 @@ export default {
               } else if (vm.comGraph.nodesComplete[i].id.indexOf("cluster")==0 || vm.comGraph.nodesComplete[i].id.indexOf("tenant")==0 || vm.comGraph.nodesComplete[i].id.indexOf("user")==0 || vm.comGraph.nodesComplete[i].id.indexOf("app")==0) {
                 vm.comGraph.nodesVsystem.push(vm.comGraph.nodesComplete[i])
               }
+              // record the problem node
+              if (vm.comGraph.nodesComplete[i].color == "red") {
+                vm.comGraph.nodesIssue.push(vm.comGraph.nodesComplete[i])
+                vm.comGraph.nodesNameIssue.push(vm.comGraph.nodesComplete[i].id)
+              }
             }
+
+            // var currProblemNodeNum = vm.comGraph.nodesNameIssue.length
+            var nodesNameIssueAdded = new Array()
             for (var i in vm.comGraph.edgesComplete) {
               if ((vm.comGraph.edgesComplete[i].from.indexOf("cluster")==0 || vm.comGraph.edgesComplete[i].from.indexOf("node")==0 || vm.comGraph.edgesComplete[i].from.indexOf("pod")==0 || vm.comGraph.edgesComplete[i].from.indexOf("container")==0) 
                     && (vm.comGraph.edgesComplete[i].to.indexOf("node")==0 || vm.comGraph.edgesComplete[i].to.indexOf("pod")==0 || vm.comGraph.edgesComplete[i].to.indexOf("container")==0)) {
@@ -323,7 +346,40 @@ export default {
                     && (vm.comGraph.edgesComplete[i].to.indexOf("tenant")==0 || vm.comGraph.edgesComplete[i].to.indexOf("user")==0 || vm.comGraph.edgesComplete[i].to.indexOf("app")==0)) {
                 vm.comGraph.edgesVsystem.push(vm.comGraph.edgesComplete[i])
               }
+              if (vm.comGraph.nodesNameIssue.indexOf(vm.comGraph.edgesComplete[i].to) != -1) {
+                vm.comGraph.edgesIssue.push(vm.comGraph.edgesComplete[i])
+                nodesNameIssueAdded.push(vm.comGraph.edgesComplete[i].from)
+              }
             }
+            vm.comGraph.nodesNameIssue = nodesNameIssueAdded
+            for (var i in vm.comGraph.nodesComplete) {
+                if (vm.comGraph.nodesNameIssue.indexOf(vm.comGraph.nodesComplete[i].id) != -1) {
+                  vm.comGraph.nodesIssue.push(vm.comGraph.nodesComplete[i])
+                }
+            }
+            
+            // construct issue view
+            while (vm.comGraph.nodesNameIssue.length != 0) {
+              // add edges and record node name
+              nodesNameIssueAdded = []
+              for (var i in vm.comGraph.edgesComplete) {
+                if (vm.comGraph.nodesNameIssue.indexOf(vm.comGraph.edgesComplete[i].to) != -1) {
+                  vm.comGraph.edgesIssue.push(vm.comGraph.edgesComplete[i])
+                  nodesNameIssueAdded.push(vm.comGraph.edgesComplete[i].from)
+                }
+              }
+              vm.comGraph.nodesNameIssue = nodesNameIssueAdded
+              vm.comGraph.nodesNameIssue = Array.from(new Set(vm.comGraph.nodesNameIssue))
+
+              // add node according to node name
+              for (var i in vm.comGraph.nodesComplete) {
+                if (vm.comGraph.nodesNameIssue.indexOf(vm.comGraph.nodesComplete[i].id) != -1) {
+                  vm.comGraph.nodesIssue.push(vm.comGraph.nodesComplete[i])
+                }
+              }
+            }
+            vm.comGraph.nodesIssue = Array.from(new Set(vm.comGraph.nodesIssue))
+
         } else if (res.data.status == "failed") {
           vm.checkResult = ""
           vm.$alert('Task job failed.' + res.data.data, 'Alert', {
