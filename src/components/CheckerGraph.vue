@@ -37,7 +37,7 @@
             </div>
           </el-tab-pane>
           <el-tab-pane label="Entities Relationship">
-            <div> 
+            <div>
               <div style="margin-bottom:10px;">　
                 <el-dropdown trigger="click" @command="handleCommand">
                   <el-button type="primary">
@@ -61,9 +61,10 @@
           <el-tab-pane label="Root Cause Analysis">
             <el-col>
               <h3 style="text-align:center;">Root Cause List:</h3>
-              <el-col :span="16" :offset="5">
+              <el-col :span="16" :offset="7">
                 <el-table :data="tableData" stripe style="width:100%">
-                  <el-table-column prop="rca" width="700" label="Root Cause Analysis"></el-table-column>
+                  <el-table-column prop="rca" width="300" label="Root Cause"></el-table-column>
+                  <el-table-column prop="entity" width="400" label="Unavailable Entity"></el-table-column>
                   <el-table-column prop="vote" width="100" label="Votes"></el-table-column>
                 </el-table>
               </el-col>
@@ -310,7 +311,9 @@ export default {
             var rcaTableData = []
             for (var key in vm.rcaList) {
               var rcaTableItem = new Object();
-              rcaTableItem.rca = vm.rcaList[key].Key
+              var keyArr = vm.rcaList[key].Key.split("[")
+              rcaTableItem.rca = keyArr[0]
+              rcaTableItem.entity = keyArr[1].split("]")[0]
               rcaTableItem.vote = vm.rcaList[key].Value
               rcaTableData.push(rcaTableItem)
             }
