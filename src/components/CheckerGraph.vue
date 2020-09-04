@@ -315,7 +315,10 @@ export default {
               rcaTableItem.rc = vm.rcaList[index].RootCause
               rcaTableItem.entity = vm.rcaList[index].Entity
               rcaTableItem.vote = vm.rcaList[index].Vote
-              rcaTableItem.ra = vm.rcaList[index].RecommendedAction
+              rcaTableItem.ra = ""
+              if (vm.rcaList[index].RecommendedActions != null) {
+                rcaTableItem.ra = vm.rcaList[index].RecommendedActions.join(",")
+              }
               rcaTableData.push(rcaTableItem)
             }
             vm.tableData = rcaTableData
