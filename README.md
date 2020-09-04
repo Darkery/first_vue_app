@@ -1,4 +1,4 @@
-# first_app
+# DI Diagnostic Center
 
 ## Project setup
 ```
