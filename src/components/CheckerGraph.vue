@@ -126,11 +126,6 @@ export default {
         this.waitForResult()
       }
     }
-    // checkResult: function (newValue, oldValue) {
-    //   if (oldValue == "") {
-    //     this.waitForResult()
-    //   }
-    // }
   },
 
   methods: {
@@ -326,7 +321,7 @@ export default {
                 if (vm.comGraph.nodesComplete[i].id.indexOf("cluster")==0) {
                   vm.comGraph.nodesVsystem.push(vm.comGraph.nodesComplete[i])
                 }
-              } else if (vm.comGraph.nodesComplete[i].id.indexOf("cluster")==0 || vm.comGraph.nodesComplete[i].id.indexOf("tenant")==0 || vm.comGraph.nodesComplete[i].id.indexOf("user")==0 || vm.comGraph.nodesComplete[i].id.indexOf("app")==0) {
+              } else if (vm.comGraph.nodesComplete[i].id.indexOf("cluster")==0 || vm.comGraph.nodesComplete[i].id.indexOf("tenant")==0 || vm.comGraph.nodesComplete[i].id.indexOf("user")==0 || vm.comGraph.nodesComplete[i].id.indexOf("app")==0 || vm.comGraph.nodesComplete[i].id.indexOf("graph")==0) {
                 vm.comGraph.nodesVsystem.push(vm.comGraph.nodesComplete[i])
               }
               // record the problem node
@@ -342,8 +337,8 @@ export default {
               if ((vm.comGraph.edgesComplete[i].from.indexOf("cluster")==0 || vm.comGraph.edgesComplete[i].from.indexOf("node")==0 || vm.comGraph.edgesComplete[i].from.indexOf("pod")==0 || vm.comGraph.edgesComplete[i].from.indexOf("container")==0) 
                     && (vm.comGraph.edgesComplete[i].to.indexOf("node")==0 || vm.comGraph.edgesComplete[i].to.indexOf("pod")==0 || vm.comGraph.edgesComplete[i].to.indexOf("container")==0)) {
                 vm.comGraph.edgesK8s.push(vm.comGraph.edgesComplete[i])
-              } else if ((vm.comGraph.edgesComplete[i].from.indexOf("cluster")==0 || vm.comGraph.edgesComplete[i].from.indexOf("tenant")==0 || vm.comGraph.edgesComplete[i].from.indexOf("user")==0 || vm.comGraph.edgesComplete[i].from.indexOf("app")==0) 
-                    && (vm.comGraph.edgesComplete[i].to.indexOf("tenant")==0 || vm.comGraph.edgesComplete[i].to.indexOf("user")==0 || vm.comGraph.edgesComplete[i].to.indexOf("app")==0)) {
+              } else if ((vm.comGraph.edgesComplete[i].from.indexOf("cluster")==0 || vm.comGraph.edgesComplete[i].from.indexOf("tenant")==0 || vm.comGraph.edgesComplete[i].from.indexOf("user")==0 || vm.comGraph.edgesComplete[i].from.indexOf("app")==0 || vm.comGraph.edgesComplete[i].from.indexOf("graph")==0) 
+                    && (vm.comGraph.edgesComplete[i].to.indexOf("tenant")==0 || vm.comGraph.edgesComplete[i].to.indexOf("user")==0 || vm.comGraph.edgesComplete[i].to.indexOf("app")==0 || vm.comGraph.edgesComplete[i].to.indexOf("graph")==0)) {
                 vm.comGraph.edgesVsystem.push(vm.comGraph.edgesComplete[i])
               }
               if (vm.comGraph.nodesNameIssue.indexOf(vm.comGraph.edgesComplete[i].to) != -1) {
