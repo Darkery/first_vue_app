@@ -105,6 +105,10 @@ export default {
       comGraph: {
         options: {
           height: "1200px",
+          physics:{
+            enabled: true,
+            timestep: 0.4,
+          },
         },
         edges: [],
         nodes: [],
@@ -323,12 +327,12 @@ export default {
             vm.comGraph.nodesComplete = JSON.parse(res.data.data).componentsGraph.nodes;
             
             for (var i in vm.comGraph.nodesComplete) {
-              if (vm.comGraph.nodesComplete[i].id.indexOf("cluster")==0 || vm.comGraph.nodesComplete[i].id.indexOf("node")==0 || vm.comGraph.nodesComplete[i].id.indexOf("pod")==0 || vm.comGraph.nodesComplete[i].id.indexOf("container")==0) {
+              if (vm.comGraph.nodesComplete[i].id.indexOf("di")==0 || vm.comGraph.nodesComplete[i].id.indexOf("node")==0 || vm.comGraph.nodesComplete[i].id.indexOf("pod")==0 || vm.comGraph.nodesComplete[i].id.indexOf("container")==0) {
                 vm.comGraph.nodesK8s.push(vm.comGraph.nodesComplete[i])
-                if (vm.comGraph.nodesComplete[i].id.indexOf("cluster")==0) {
+                if (vm.comGraph.nodesComplete[i].id.indexOf("di")==0) {
                   vm.comGraph.nodesVsystem.push(vm.comGraph.nodesComplete[i])
                 }
-              } else if (vm.comGraph.nodesComplete[i].id.indexOf("cluster")==0 || vm.comGraph.nodesComplete[i].id.indexOf("tenant")==0 || vm.comGraph.nodesComplete[i].id.indexOf("user")==0 || vm.comGraph.nodesComplete[i].id.indexOf("app")==0 || vm.comGraph.nodesComplete[i].id.indexOf("graph")==0) {
+              } else if (vm.comGraph.nodesComplete[i].id.indexOf("di")==0 || vm.comGraph.nodesComplete[i].id.indexOf("tenant")==0 || vm.comGraph.nodesComplete[i].id.indexOf("user")==0 || vm.comGraph.nodesComplete[i].id.indexOf("app")==0 || vm.comGraph.nodesComplete[i].id.indexOf("graph")==0) {
                 vm.comGraph.nodesVsystem.push(vm.comGraph.nodesComplete[i])
               }
               // record the problem node
@@ -341,10 +345,10 @@ export default {
             // var currProblemNodeNum = vm.comGraph.nodesNameIssue.length
             var nodesNameIssueAdded = new Array()
             for (var i in vm.comGraph.edgesComplete) {
-              if ((vm.comGraph.edgesComplete[i].from.indexOf("cluster")==0 || vm.comGraph.edgesComplete[i].from.indexOf("node")==0 || vm.comGraph.edgesComplete[i].from.indexOf("pod")==0 || vm.comGraph.edgesComplete[i].from.indexOf("container")==0) 
+              if ((vm.comGraph.edgesComplete[i].from.indexOf("di")==0 || vm.comGraph.edgesComplete[i].from.indexOf("node")==0 || vm.comGraph.edgesComplete[i].from.indexOf("pod")==0 || vm.comGraph.edgesComplete[i].from.indexOf("container")==0) 
                     && (vm.comGraph.edgesComplete[i].to.indexOf("node")==0 || vm.comGraph.edgesComplete[i].to.indexOf("pod")==0 || vm.comGraph.edgesComplete[i].to.indexOf("container")==0)) {
                 vm.comGraph.edgesK8s.push(vm.comGraph.edgesComplete[i])
-              } else if ((vm.comGraph.edgesComplete[i].from.indexOf("cluster")==0 || vm.comGraph.edgesComplete[i].from.indexOf("tenant")==0 || vm.comGraph.edgesComplete[i].from.indexOf("user")==0 || vm.comGraph.edgesComplete[i].from.indexOf("app")==0 || vm.comGraph.edgesComplete[i].from.indexOf("graph")==0) 
+              } else if ((vm.comGraph.edgesComplete[i].from.indexOf("di")==0 || vm.comGraph.edgesComplete[i].from.indexOf("tenant")==0 || vm.comGraph.edgesComplete[i].from.indexOf("user")==0 || vm.comGraph.edgesComplete[i].from.indexOf("app")==0 || vm.comGraph.edgesComplete[i].from.indexOf("graph")==0) 
                     && (vm.comGraph.edgesComplete[i].to.indexOf("tenant")==0 || vm.comGraph.edgesComplete[i].to.indexOf("user")==0 || vm.comGraph.edgesComplete[i].to.indexOf("app")==0 || vm.comGraph.edgesComplete[i].to.indexOf("graph")==0)) {
                 vm.comGraph.edgesVsystem.push(vm.comGraph.edgesComplete[i])
               }
