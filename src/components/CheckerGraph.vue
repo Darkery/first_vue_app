@@ -221,22 +221,13 @@ export default {
       this.myChart = echarts.init(document.getElementById('checkerGraph'));
       
       let option = {
-        title: {
-          text: 'Checker Result',
-          subtext: '',
-          top: 10,
-          left: 10,
-          textStyle: {
-            fontSize: 20
-          }
-        },
         tooltip: {
           trigger: 'item',
           triggerOn: 'mousemove'
         },
         legend: [
           {
-            top: '40',
+            top: '10',
             left: '10',
             orient: 'horizontal',
             icon: 'roundRect',
