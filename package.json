@@ -15,6 +15,7 @@
     "vis-network": "^8.2.0",
     "vis-util": "^4.3.4",
     "vue": "^2.6.11",
+    "vue-router": "^3.4.3",
     "vue-vis-network": "^1.0.2"
   },
   "devDependencies": {

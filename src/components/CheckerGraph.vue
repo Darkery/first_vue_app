@@ -66,7 +66,11 @@
                   <el-table-column prop="rc" width="300" label="Root Cause"></el-table-column>
                   <el-table-column prop="entity" width="400" label="Unavailable Entity"></el-table-column>
                   <el-table-column prop="vote" width="100" label="Votes"></el-table-column>
-                  <el-table-column prop="ra" width="400" label="Recommended Action"></el-table-column>
+                  <el-table-column width="400" label="Recommended Action">
+                    <template slot-scope="scope">
+                      <a v-for="ra in scope.row.raList" :key="ra" :href="appUrl + 'ra/' + ra" target="_blank">{{ ra }}, </a>
+                    </template>
+                  </el-table-column>
                 </el-table>
               </el-col>
             </el-col>
@@ -87,6 +91,7 @@ export default {
   name: 'CheckGraph',
   data() {
     return {
+      appUrl: this.$route.path + "#/",
       formItems: {
         vsystemPassword: '',
         configFile: ''
@@ -125,7 +130,7 @@ export default {
   watch: {
     requestResult: function (newValue, oldValue) {
       if (oldValue == "") {
-        this.waitForResult()
+        this.checkTaskStatus()
       }
     }
   },
@@ -310,9 +315,11 @@ export default {
               rcaTableItem.rc = vm.rcaList[index].RootCause
               rcaTableItem.entity = vm.rcaList[index].Entity
               rcaTableItem.vote = vm.rcaList[index].Vote
-              rcaTableItem.ra = ""
+              rcaTableItem.raList = []
               if (vm.rcaList[index].RecommendedActions != null) {
-                rcaTableItem.ra = vm.rcaList[index].RecommendedActions.join(",")
+                for (var i in vm.rcaList[index].RecommendedActions) {
+                  rcaTableItem.raList.push(vm.rcaList[index].RecommendedActions[i])
+                }
               }
               rcaTableData.push(rcaTableItem)
             }
@@ -394,10 +401,6 @@ export default {
           });
         }
       })
-    },
-
-    waitForResult() {
-      this.checkTaskStatus()
     },
 
     submitForm() {
