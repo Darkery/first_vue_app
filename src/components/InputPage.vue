@@ -23,41 +23,9 @@
       <el-col :span="24">
         <el-tabs type="border-card">
           <el-tab-pane label="Checkers Runtime">
-            <!-- <div style="position: relative;">
-              <div v-if="checkResult" id="tags">
-                <el-tag
-                  v-for="item in tagItems"
-                  :key="item.label"
-                  :type="item.type"
-                  effect="dark">
-                  {{ item.label }}
-                </el-tag>
-              </div>
-              <div id="checkerGraph"></div>
-            </div> -->
             <checkerGraph v-if="checkResultData" :checkResultData="checkResultData" :checkResult="checkResult" :home="this"></checkerGraph>
           </el-tab-pane>
           <el-tab-pane label="Entities Relationship">
-            <!-- <div>
-              <div style="margin-bottom:10px;">　
-                <el-dropdown trigger="click" @command="handleCommand">
-                  <el-button type="primary">
-                    Select View<i class="el-icon-arrow-down el-icon--right"></i>
-                  </el-button>
-                  <el-dropdown-menu slot="dropdown">
-                    <el-dropdown-item command="Complete View">Complete View</el-dropdown-item>
-                    <el-dropdown-item command="Issue View">Issue View</el-dropdown-item>
-                    <el-dropdown-item command="K8s View">K8s View</el-dropdown-item>
-                    <el-dropdown-item command="Vsystem View">Vsystem View</el-dropdown-item>
-                  </el-dropdown-menu>
-                </el-dropdown>
-              </div>    
-              <network ref="network"
-                :nodes="comGraph.nodes"
-                :edges="comGraph.edges"
-                :options="comGraph.options"
-              ></network>
-            </div> -->
             <componentGraph v-if="checkResultData" :checkResultData="checkResultData" :home="this"></componentGraph>
           </el-tab-pane>
           <el-tab-pane label="Root Cause Analysis">
@@ -104,11 +72,6 @@ export default {
         vsystemPassword: '',
         configFile: ''
       },
-      // tagItems: [
-      //   { type: 'success', label: 'Finished' },
-      //   { type: 'info', label: 'Skipped' },
-      //   { type: 'danger', label: 'Failed' }
-      // ],
       fileName: '',
       requestResult: '',
       checkResult: '',
