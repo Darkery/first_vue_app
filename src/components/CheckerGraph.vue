@@ -1,15 +1,15 @@
 <template>
     <div style="position: relative;">
-    <div v-if="checkResult" id="tags">
-    <el-tag
-        v-for="item in tagItems"
-        :key="item.label"
-        :type="item.type"
-        effect="dark">
-        {{ item.label }}
-    </el-tag>
-    </div>
-    <div id="checkerGraphID"></div>
+        <div id="tags">
+            <el-tag
+                v-for="item in tagItems"
+                :key="item.label"
+                :type="item.type"
+                effect="dark">
+                {{ item.label }}
+            </el-tag>
+        </div>
+        <div id="checkerGraphID"></div>
     </div>
 </template>
 
@@ -25,11 +25,10 @@
                 ],
             };
         },
-        props:['checkResultData', 'checkResult', 'home'],
+        props:['checkResultData'],
         methods: {
             drawCheckerGraph() {
-                var vm = this;
-                var responseData = this.home.checkResultData
+                var responseData = this.checkResultData
                 var data_k8s = JSON.parse(responseData).k8s_runtimeGraph
                 var data_vsystem = JSON.parse(responseData).vsystem_runtimeGraph
                 const echarts = require('echarts');

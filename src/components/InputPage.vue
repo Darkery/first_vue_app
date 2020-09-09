@@ -23,10 +23,10 @@
       <el-col :span="24">
         <el-tabs type="border-card">
           <el-tab-pane label="Checkers Runtime">
-            <checkerGraph v-if="checkResultData" :checkResultData="checkResultData" :checkResult="checkResult" :home="this"></checkerGraph>
+            <checkerGraph v-if="checkResultData" :checkResultData="checkResultData"></checkerGraph>
           </el-tab-pane>
           <el-tab-pane label="Entities Relationship">
-            <componentGraph v-if="checkResultData" :checkResultData="checkResultData" :home="this"></componentGraph>
+            <componentGraph v-if="checkResultData" :checkResultData="checkResultData"></componentGraph>
           </el-tab-pane>
           <el-tab-pane label="Root Cause Analysis">
             <el-col>
@@ -54,6 +54,7 @@
   </div>
 </template>
 
+<script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
 <script>
 import client from "@/utils/client";
 import checkerGraph from "@/components/CheckerGraph.vue"

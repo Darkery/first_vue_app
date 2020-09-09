@@ -13,7 +13,7 @@
             </el-dropdown-menu>
         </el-dropdown>
         </div>    
-        <network ref="network"
+        <network ref="network" style="height:1200px;"
             :nodes="comGraph.nodes"
             :edges="comGraph.edges"
             :options="comGraph.options"
@@ -27,10 +27,10 @@
             return {
                 comGraph: {
                     options: {
-                        height: "1200px",
+                        autoResize: true,
                         physics:{
                             enabled: true,
-                            timestep: 0.4,
+                            adaptiveTimestep: true
                         },
                     },
                     edges: [],
@@ -64,7 +64,7 @@
                 }
             },
             setComponentGraphData() {
-                var input = this.home.checkResultData
+                var input = this.checkResultData
                 this.comGraph.edges = JSON.parse(input).componentsGraph.edges;
                 this.comGraph.nodes = JSON.parse(input).componentsGraph.nodes;
                 this.comGraph.edgesComplete = JSON.parse(input).componentsGraph.edges;
@@ -79,7 +79,7 @@
                     this.comGraph.nodesVsystem.push(this.comGraph.nodesComplete[i])
                     }
                     // record the problem node
-                    if (this.comGraph.nodesComplete[i].color == "red") {
+                    if (this.comGraph.nodesComplete[i].color == "#F56C6C") {
                     this.comGraph.nodesIssue.push(this.comGraph.nodesComplete[i])
                     this.comGraph.nodesNameIssue.push(this.comGraph.nodesComplete[i].id)
                     }
@@ -126,9 +126,10 @@
                     }
                 }
                 this.comGraph.nodesIssue = Array.from(new Set(this.comGraph.nodesIssue))
+                this.comGraph.edgesIssue = Array.from(new Set(this.comGraph.edgesIssue))
             }
         },
-        props:['checkResultData', 'home'],
+        props:['checkResultData'],
         mounted() {
             this.setComponentGraphData()
         }
