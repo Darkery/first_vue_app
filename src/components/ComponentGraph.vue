@@ -50,6 +50,14 @@
                             enabled: true,
                             adaptiveTimestep: true
                         },
+                        edges: {
+                            arrows: {
+                                to: { enabled: true, scaleFactor: 0.5, type: 'arrow' }
+                            },
+                            scaling:{
+                                label: true,
+                            },
+                        },
                     },
                     edges: [],
                     nodes: [],
