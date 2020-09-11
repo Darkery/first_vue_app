@@ -22,21 +22,15 @@
     <div v-if="requestResult">
       <el-col :span="24">
         <el-tabs type="border-card">
-          <el-tab-pane label="Checkers Runtime">
-            <checkerGraph v-if="checkResultData" :checkResultData="checkResultData"></checkerGraph>
-          </el-tab-pane>
-          <el-tab-pane label="Entities Relationship">
-            <componentGraph v-if="checkResultData" :checkResultData="checkResultData"></componentGraph>
-          </el-tab-pane>
           <el-tab-pane label="Root Cause Analysis">
             <el-col>
               <h3 style="text-align:center;">Root Cause List:</h3>
-              <el-col :span="24" :offset="1">
+              <el-col :span="21.5" :offset="1">
                 <el-table :data="tableData" stripe style="width:100%">
                   <el-table-column prop="rc" width="300" label="Root Cause"></el-table-column>
                   <el-table-column prop="entity" width="400" label="Unavailable Entity"></el-table-column>
                   <el-table-column prop="vote" width="100" label="Votes"></el-table-column>
-                  <el-table-column width="400" label="Recommended Action">
+                  <el-table-column width="300" label="Recommended Action">
                     <template slot-scope="scope">
                       <a v-for="ra in scope.row.raList" :key="ra" :href="appUrl + 'ra/' + ra" target="_blank">{{ ra }}, </a>
                     </template>
@@ -44,6 +38,12 @@
                 </el-table>
               </el-col>
             </el-col>
+          </el-tab-pane>
+          <el-tab-pane label="Entities Relationship">
+            <componentGraph v-if="checkResultData" :checkResultData="checkResultData"></componentGraph>
+          </el-tab-pane>
+          <el-tab-pane label="Checkers Runtime">
+            <checkerGraph v-if="checkResultData" :checkResultData="checkResultData"></checkerGraph>
           </el-tab-pane>
         </el-tabs>
       </el-col>

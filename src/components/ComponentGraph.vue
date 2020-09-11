@@ -12,6 +12,15 @@
             <el-dropdown-item command="Vsystem View">Vsystem View</el-dropdown-item>
             </el-dropdown-menu>
         </el-dropdown>
+        </div>
+        <div id="tags">
+            <el-tag
+                v-for="item in tagItems"
+                :key="item.label"
+                :color="item.color"
+                >
+                {{ item.label }}
+            </el-tag>
         </div>    
         <network ref="network" style="height:1200px;"
             :nodes="comGraph.nodes"
@@ -25,6 +34,15 @@
     export default {
         data() {
             return {
+                tagItems: [
+                    { color: "#B0EF5E", label: 'node' },
+                    { color: "#FBF363", label: 'pod' },
+                    { color: "#EDBF7B", label: 'container' },
+                    { color: "#409EFF", label: 'tenant' },
+                    { color: "#bac5f7", label: 'user' },
+                    { color: "#9EC7D8", label: 'application' },
+                    { color: "#C0C4CC", label: 'graph' },
+                ],
                 comGraph: {
                     options: {
                         autoResize: true,
@@ -79,7 +97,7 @@
                     this.comGraph.nodesVsystem.push(this.comGraph.nodesComplete[i])
                     }
                     // record the problem node
-                    if (this.comGraph.nodesComplete[i].color == "#F56C6C") {
+                    if (this.comGraph.nodesComplete[i].color.border == "red") {
                     this.comGraph.nodesIssue.push(this.comGraph.nodesComplete[i])
                     this.comGraph.nodesNameIssue.push(this.comGraph.nodesComplete[i].id)
                     }

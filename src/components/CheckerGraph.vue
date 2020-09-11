@@ -53,7 +53,7 @@
                     series:[
                     {
                         type: 'tree',
-                        name: 'k8s_checker_graph',
+                        name: 'vsystem_checker_graph',
                         data: [data_vsystem],
                         left: '14%',
                         right: '65%',
@@ -78,12 +78,12 @@
                     },
                     {
                         type: 'tree',
-                        name: 'vsystem_checker_graph',
+                        name: 'k8s_checker_graph',
                         data: [data_k8s],
                         left: '60%',
                         right: '20%',
                         symbolSize: 10,
-                        initialTreeDepth: 2,
+                        initialTreeDepth: 1,
                         roam: true,
                         label: {
                         fontSize: 15,
