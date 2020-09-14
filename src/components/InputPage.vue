@@ -4,7 +4,7 @@
       <h2>Please input the following needed items:</h2>
       <el-form>
         <el-form-item>
-          <label class="formItems">Vsystm Password of System Tenant System User:</label>
+          <label class="formItems">Vsystem Password of System Tenant System User:</label>
           <el-input class="formItems" v-model="formItems.vsystemPassword" show-password placeholder="please edit here..."></el-input>
         </el-form-item>
         <el-form-item>
