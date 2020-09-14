@@ -18,6 +18,7 @@
                 v-for="item in tagItems"
                 :key="item.label"
                 :color="item.color"
+                :type="item.type"
                 >
                 {{ item.label }}
             </el-tag>
@@ -35,13 +36,13 @@
         data() {
             return {
                 tagItems: [
-                    { color: "#B0EF5E", label: 'node' },
-                    { color: "#FBF363", label: 'pod' },
-                    { color: "#EDBF7B", label: 'container' },
-                    { color: "#409EFF", label: 'tenant' },
-                    { color: "#bac5f7", label: 'user' },
-                    { color: "#9EC7D8", label: 'application' },
-                    { color: "#C0C4CC", label: 'graph' },
+                    { type: 'danger', color: "#B0EF5E", label: 'node' },
+                    { type: "danger", color: "#FBF363", label: 'pod' },
+                    { type: "danger", color: "#EDBF7B", label: 'container' },
+                    { type: "danger", color: "#409EFF", label: 'tenant' },
+                    { type: "danger", color: "#bac5f7", label: 'user' },
+                    { type: "danger", color: "#9EC7D8", label: 'application' },
+                    { type: "danger", color: "#C0C4CC", label: 'graph' },
                 ],
                 comGraph: {
                     options: {
