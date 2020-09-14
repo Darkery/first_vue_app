@@ -42,7 +42,7 @@
           <el-tab-pane label="Entities Relationship">
             <componentGraph v-if="checkResultData" :checkResultData="checkResultData"></componentGraph>
           </el-tab-pane>
-          <el-tab-pane label="Checkers Runtime">
+          <el-tab-pane label="Checkers Runtime" lazy='true'>
             <checkerGraph v-if="checkResultData" :checkResultData="checkResultData"></checkerGraph>
           </el-tab-pane>
         </el-tabs>
