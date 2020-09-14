@@ -57,6 +57,7 @@
                             scaling:{
                                 label: true,
                             },
+                            smooth: true,
                         },
                     },
                     edges: [],
