@@ -1,7 +1,7 @@
 <template>
     <div id="header">
       <el-row>
-        <el-col :span="10"><img style="height: 200px;" src="@/assets/logo.png"></el-col>
+        <el-col :span="10"><img style="height: 100px;" src="@/assets/logo.png"></el-col>
         <el-col :span="14"><h1>DI Diagnostic Center</h1></el-col>
       </el-row>
     </div>
@@ -16,11 +16,11 @@ export default {
 <style scoped>
 #header {
   text-align: right;
-  height: 200px;
+  height: 100px;
 }
 h1 {
-  font-size: 50px;
-  margin-top: 80px;
+  font-size: 35px;
+  margin-top: 33px;
   text-align: left;
 }
 </style>

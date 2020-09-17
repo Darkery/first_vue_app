@@ -13,16 +13,15 @@
             </el-dropdown-menu>
         </el-dropdown>
         </div>
-        <div id="tags">
-            <el-tag
-                v-for="item in tagItems"
-                :key="item.label"
-                :color="item.color"
-                :type="item.type"
-                >
-                {{ item.label }}
-            </el-tag>
-        </div>    
+        <div style="display:inline">
+            <div id="node" style="backgroundColor:#B0EF5E; width:40px; float:left">node</div>
+            <div id="pod" style="backgroundColor:#FBF363; width:35px; float:left">pod</div>
+            <div id="container" style="backgroundColor:#EDBF7B; width:70px; float:left">container</div>
+            <div id="application" style="backgroundColor:#9EC7D8; width:80px; float:left">application</div>
+            <div id="tenant" style="backgroundColor:#409EFF; width:55px; float:left">tenant</div>
+            <div id="user" style="backgroundColor:#bac5f7; width:40px; float:left">user</div>
+            <div id="graph" style="backgroundColor:#C0C4CC; width:50px; float:left">graph</div>
+        </div>
         <network ref="network" style="height:1200px;"
             :nodes="comGraph.nodes"
             :edges="comGraph.edges"
@@ -35,15 +34,6 @@
     export default {
         data() {
             return {
-                tagItems: [
-                    { type: 'danger', color: "#B0EF5E", label: 'node' },
-                    { type: "danger", color: "#FBF363", label: 'pod' },
-                    { type: "danger", color: "#EDBF7B", label: 'container' },
-                    { type: "danger", color: "#409EFF", label: 'tenant' },
-                    { type: "danger", color: "#bac5f7", label: 'user' },
-                    { type: "danger", color: "#9EC7D8", label: 'application' },
-                    { type: "danger", color: "#C0C4CC", label: 'graph' },
-                ],
                 comGraph: {
                     options: {
                         autoResize: true,

@@ -25,7 +25,7 @@
           <el-tab-pane label="Root Cause Analysis">
             <el-col>
               <h3 style="text-align:center;">Root Cause List:</h3>
-              <el-col :span="21.5" :offset="1">
+              <el-col :span="14.5" :offset="5">
                 <el-table :data="tableData" stripe style="width:100%">
                   <el-table-column prop="rc" width="300" label="Root Cause"></el-table-column>
                   <el-table-column prop="entity" width="400" label="Unavailable Entity"></el-table-column>
@@ -237,6 +237,6 @@ export default {
   font-size:15px;
 }
 .el-tab-pane {
-  height: 1200px;
+  height: 800px;
 }
 </style>

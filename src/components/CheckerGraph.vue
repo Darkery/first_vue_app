@@ -114,7 +114,7 @@
 <style scoped>
     #checkerGraphID {
         margin: auto;
-        height: 1200px;
+        height: 800px;
         text-align: left;
     }
 </style>
