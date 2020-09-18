@@ -14,13 +14,13 @@
         </el-dropdown>
         </div>
         <div style="display:inline">
-            <div id="node" style="backgroundColor:#B0EF5E; width:40px; float:left">node</div>
-            <div id="pod" style="backgroundColor:#FBF363; width:35px; float:left">pod</div>
-            <div id="container" style="backgroundColor:#EDBF7B; width:70px; float:left">container</div>
-            <div id="application" style="backgroundColor:#9EC7D8; width:80px; float:left">application</div>
-            <div id="tenant" style="backgroundColor:#409EFF; width:55px; float:left">tenant</div>
-            <div id="user" style="backgroundColor:#bac5f7; width:40px; float:left">user</div>
-            <div id="graph" style="backgroundColor:#C0C4CC; width:50px; float:left">graph</div>
+            <div id="node" style="backgroundColor:#B0EF5E; width:55px; float:left; text-align: center">node</div>
+            <div id="pod" style="backgroundColor:#FBF363; width:50px; float:left; text-align: center">pod</div>
+            <div id="container" style="backgroundColor:#EDBF7B; width:85px; float:left; text-align: center">container</div>
+            <div id="application" style="backgroundColor:#9EC7D8; width:95px; float:left; text-align: center">application</div>
+            <div id="tenant" style="backgroundColor:#409EFF; width:65px; float:left; text-align: center">tenant</div>
+            <div id="user" style="backgroundColor:#bac5f7; width:45px; float:left; text-align: center">user</div>
+            <div id="graph" style="backgroundColor:#C0C4CC; width:60px; float:left; text-align: center">graph</div>
         </div>
         <network ref="network" style="height:1200px;"
             :nodes="comGraph.nodes"

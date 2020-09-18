@@ -1,13 +1,9 @@
 <template>
     <div style="position: relative;">
-        <div id="tags">
-            <el-tag
-                v-for="item in tagItems"
-                :key="item.label"
-                :type="item.type"
-                effect="dark">
-                {{ item.label }}
-            </el-tag>
+        <div style="display:inline">
+            <div style="backgroundColor:#67C23A; width:80px; float:left; text-align: center">finished</div>
+            <div style="backgroundColor:#909399; width:75px; float:left; text-align: center">skipped</div>
+            <div style="backgroundColor:#F56C6C; width:65px; float:left; text-align: center">failed</div>
         </div>
         <div id="checkerGraphID"></div>
     </div>
@@ -18,11 +14,6 @@
         data() {
             return {
                 myChart: '',
-                tagItems: [
-                    { type: 'success', label: 'Finished' },
-                    { type: 'info', label: 'Skipped' },
-                    { type: 'danger', label: 'Failed' }
-                ],
             };
         },
         props:['checkResultData'],
@@ -53,7 +44,7 @@
                     series:[
                     {
                         type: 'tree',
-                        name: 'vsystem_checker_graph',
+                        // name: 'vsystem_checker_graph',
                         data: [data_vsystem],
                         left: '14%',
                         right: '65%',
@@ -78,7 +69,7 @@
                     },
                     {
                         type: 'tree',
-                        name: 'k8s_checker_graph',
+                        // name: 'k8s_checker_graph',
                         data: [data_k8s],
                         left: '60%',
                         right: '20%',
