@@ -2,7 +2,18 @@
   <div>
     <div v-if="!requestResult" id="inputDiv">
       <h2>Please input the following needed items:</h2>
+      <div style="margin-top: 20px">
+        <el-radio-group v-model="diType">
+          <el-radio-button label="DI On-Cloud"></el-radio-button>
+          <el-radio-button label="DI On-Premise"></el-radio-button>
+          <!-- <el-radio-button label="DI Enbeded"></el-radio-button> -->
+        </el-radio-group>
+      </div>
       <el-form>
+        <el-form-item v-if="diType == 'DI On-Premise'">
+          <label class="formItems">DI Namespace:</label>
+          <el-input class="formItems" v-model="formItems.diNamespace" show-password placeholder="please edit here..."></el-input>
+        </el-form-item>
         <el-form-item>
           <label class="formItems">Vsystem Password of System Tenant System User:</label>
           <el-input class="formItems" v-model="formItems.vsystemPassword" show-password placeholder="please edit here..."></el-input>
@@ -70,6 +81,7 @@ export default {
     return {
       appUrl: this.$route.path + "#/",
       formItems: {
+        diNamespace: '',
         vsystemPassword: '',
         configFile: ''
       },
@@ -80,6 +92,7 @@ export default {
       rcaList: '',
       tableData: '',
       load: '',
+      diType: 'DI On-Cloud'
     };
   },
 
@@ -130,17 +143,18 @@ export default {
     },
 
     sendForm(jsonForm) {
-      var vm = this;
+      var vm = this
       client.post('/post', jsonForm)
       .then(function (res) {
         console.log(res.data.message)
         vm.requestResult = res.data.message
       })
       .catch(function (error) {
-        console.log(error);
+        console.log(error)
         vm.$alert('Send Request failed.' + error, 'Alert', {
           confirmButtonText: 'OK'
         });
+        vm.load.close()
       });
     },
 
@@ -187,13 +201,10 @@ export default {
     },
 
     submitForm() {
-      this.load = this.$loading({
-        lock: true,
-        text: 'Your Diagnostic Task is Running',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      })
       for (var item in this.formItems) {
+        if (item == 'diNamespace' && this.diType != 'DI On-Premise' && this.formItems[item] == ''){
+          continue
+        }
         if (this.formItems[item] == '') {
           this.$alert('Please check your inputs without empty.', 'Alert', {
             confirmButtonText: 'OK'
@@ -201,7 +212,17 @@ export default {
           return
         }
       }
+      this.load = this.$loading({
+        lock: true,
+        text: 'Your Diagnostic Task is Running',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
       var jsonForm = JSON.stringify([
+        {
+          itemName : "namespace",
+          itemValue : this.formItems.diNamespace
+        },
         {
           itemName : "password",
           itemValue : this.formItems.vsystemPassword
