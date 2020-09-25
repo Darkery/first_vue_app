@@ -12,16 +12,17 @@ import {
   Col,
   Loading,
   Icon,
-  // Card,
   Table,
   TableColumn,
   TabPane,
   Tabs,
   Tag,
-  // PageHeader,
   Dropdown,
   DropdownMenu,
   DropdownItem,
+  Radio,
+  RadioGroup,
+  RadioButton,
 } from 'element-ui'
 import lang from 'element-ui/lib/locale/lang/en'
 import locale from 'element-ui/lib/locale'
@@ -36,16 +37,17 @@ Vue.use(FormItem)
 Vue.use(Row)
 Vue.use(Col)
 Vue.use(Icon)
-// Vue.use(Card)
 Vue.use(Table)
 Vue.use(TableColumn)
 Vue.use(TabPane)
 Vue.use(Tabs)
 Vue.use(Tag)
-// Vue.use(PageHeader)
 Vue.use(Dropdown)
 Vue.use(DropdownMenu)
 Vue.use(DropdownItem)
+Vue.use(Radio)
+Vue.use(RadioGroup)
+Vue.use(RadioButton)
 
 Vue.prototype.$message = Message
 Vue.prototype.$msgbox = MessageBox;
