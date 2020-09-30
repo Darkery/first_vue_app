@@ -92,7 +92,8 @@ export default {
       rcaList: '',
       tableData: '',
       load: '',
-      diType: 'DI On-Cloud'
+      diType: 'DI On-Cloud',
+      taskId: ''
     };
   },
 
@@ -111,6 +112,8 @@ export default {
       this.rcaList = ''
       this.tableData = ''
       this.checkResultData = ''
+      this.diType = 'DI On-Cloud'
+      this.taskId = ''
     },
 
     checkFile() {
@@ -148,6 +151,7 @@ export default {
       .then(function (res) {
         console.log(res.data.message)
         vm.requestResult = res.data.message
+        vm.taskId = res.data.id
       })
       .catch(function (error) {
         console.log(error)
@@ -179,7 +183,7 @@ export default {
     
     checkTaskStatus() {
       var vm = this;
-      client.get('/checkResult')
+      client.get('/checkResult/' + vm.taskId)
       .then(function (res) {
         vm.load.close()
         if (res.status == 200 && res.data.status == "finished") {
