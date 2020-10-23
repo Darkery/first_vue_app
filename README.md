@@ -42,7 +42,7 @@ npm run build
 
 ```
 docker build -t diagnostic-center-frontend .
-docker run -d diagnostic-center-frontend
+docker run -d -p 8080:80 diagnostic-center-frontend
 ```
 
 ## Description
