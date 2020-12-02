@@ -14,12 +14,14 @@ export default {
   data() {
     return {
       raName: '',
+      taskId: '',
       htmlStr: '',
     };
   },
   methods: {
-    fetchData(name) {
+    fetchData(taskId, name) {
       var vm = this;
+      vm.taskId = taskId
       vm.raName = name
       client.get('/recommendedAction/' + vm.raName)
       .then(function (res) {
@@ -28,7 +30,7 @@ export default {
     }
   },
   created() {
-    this.fetchData(this.$route.params.name);
+    this.fetchData(this.$route.params.taskId, this.$route.params.name);
     document.title = "Recommended Action " + this.raName
   }
 }

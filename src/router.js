@@ -7,20 +7,21 @@ Vue.use(Router)
 
 export default new Router({
   base: process.env.BASE_URL,
+  mode: 'history',
   routes: [
     {
-      path: '/',
+      path: '/task/:taskId',
       name: 'InputPage',
       component: InputPage,
     },
     {
-      path: '/ra/:name',
+      path: '/task/:taskId/ra/:name',
       name: 'RecommendedAction',
       component: RecommendedAction,
     },
     {
-      path: '/ra',
-      redirect: '/'
+      path: '/task/:taskId/ra',
+      redirect: '/task/:taskId'
     }
   ]
 })
