@@ -28,9 +28,6 @@
           </el-tab-pane>
         </el-tabs>
       </el-col>
-      <el-col style="margin:20px;">
-        <el-button class="formItems" round type="primary" @click="backBtn">Back</el-button>
-      </el-col>
     </div>
   </div>
 </template>
